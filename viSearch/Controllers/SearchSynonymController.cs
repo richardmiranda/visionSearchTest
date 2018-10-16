@@ -48,7 +48,7 @@ namespace viSearch.Controllers
             });
         }
 
-        [HttpGet("get")]
+        [HttpPost("get")]
         public IActionResult Get(int id)
         {
             var entity = SearchSynonym.SearchSynonyms.Find(c => c.ID == id);
@@ -101,7 +101,7 @@ namespace viSearch.Controllers
                 SearchSynonym.SearchSynonyms.Remove(removedData);
             }
             
-            return Json(new { SuccessCount = idArray.Count });
+            return Json(new { SuccessCount = idArray.Count, FailCount = 0 });
         }
         #endregion
     }

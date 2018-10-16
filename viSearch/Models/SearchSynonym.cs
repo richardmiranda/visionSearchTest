@@ -10,12 +10,6 @@ namespace viSearch.Models
         public int ID { get; set; }
         public string SearchTerm { get; set; }
         public string Synonyms { get; set; }
-
-        public static List<SearchSynonym> SearchSynonyms = new List<SearchSynonym> {
-            new SearchSynonym { ID = 1, SearchTerm = "Search Term 1", Synonyms = "Search Synonyms 1" },
-            new SearchSynonym { ID = 2, SearchTerm = "Search Term 2", Synonyms = "Search Synonyms 2" },
-            new SearchSynonym { ID = 3, SearchTerm = "Search Term 3", Synonyms = "Search Synonyms 3" }
-        };
     }
 
     public class SearchSynonymFindRequest

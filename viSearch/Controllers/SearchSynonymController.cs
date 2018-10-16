@@ -16,9 +16,9 @@ namespace viSearch.Controllers
         }
         #endregion
 
-        #region API: GetList
+        #region API: Find
         [HttpPost("find")]
-        public IActionResult GetList(SearchSynonymFindRequest model)
+        public IActionResult Find(SearchSynonymFindRequest model)
         {
             var entities = SearchSynonym.SearchSynonyms.Skip(model.PageSize * model.PageIndex).Take(model.PageSize);
             if (!string.IsNullOrEmpty(model.SortName))
@@ -37,6 +37,13 @@ namespace viSearch.Controllers
                 }
             }
             return Json(entities);
+        }
+
+        [HttpGet("get")]
+        public IActionResult Get(int id)
+        {
+            var entity = SearchSynonym.SearchSynonyms.Find(c => c.ID == id);
+            return Json(entity);
         }
         #endregion
 

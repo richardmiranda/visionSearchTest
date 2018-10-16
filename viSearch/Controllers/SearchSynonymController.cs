@@ -20,7 +20,8 @@ namespace viSearch.Controllers
         [HttpPost("find")]
         public IActionResult Find(SearchSynonymFindRequest model)
         {
-            var entities = SearchSynonym.SearchSynonyms.Skip(model.PageSize * model.PageIndex).Take(model.PageSize);
+            var totalCount = SearchSynonym.SearchSynonyms.Count;
+            var entities = SearchSynonym.SearchSynonyms.Skip(model.PageSize * (model.PageIndex - 1)).Take(model.PageSize);
             if (!string.IsNullOrEmpty(model.SortName))
             {
                 switch (model.SortName)
@@ -36,14 +37,22 @@ namespace viSearch.Controllers
                         break;
                 }
             }
-            return Json(entities);
+            return Json(new
+            {
+                PagingList = new
+                {
+                    TotalResults = totalCount,
+                    HasNext = false,
+                    Content = entities
+                }
+            });
         }
 
         [HttpGet("get")]
         public IActionResult Get(int id)
         {
             var entity = SearchSynonym.SearchSynonyms.Find(c => c.ID == id);
-            return Json(entity);
+            return Json(new { SearchSynonym = entity });
         }
         #endregion
 
@@ -58,7 +67,7 @@ namespace viSearch.Controllers
                 Synonyms = model.Synonyms
             };
             SearchSynonym.SearchSynonyms.Add(newData);
-            return Json(newData);
+            return Json(new { SearchSynonym = newData });
         }
         #endregion
 
@@ -69,7 +78,7 @@ namespace viSearch.Controllers
             var newData = SearchSynonym.SearchSynonyms.Find(c => c.ID == model.ID);
             newData.SearchTerm = model.SearchTerm;
             newData.Synonyms = model.Synonyms;
-            return Json(newData);
+            return Json(new { SearchSynonym = newData });
         }
         #endregion
 
@@ -80,6 +89,19 @@ namespace viSearch.Controllers
             var removedData = SearchSynonym.SearchSynonyms.Find(c => c.ID == id);
             SearchSynonym.SearchSynonyms.Remove(removedData);
             return Json(new { Success = true });
+        }
+
+        [HttpPost("bulkdelete")]
+        public IActionResult BulkDelete(string ids)
+        {
+            var idArray = ids.Split(",", StringSplitOptions.RemoveEmptyEntries).Select(c => int.Parse(c)).ToList();
+            foreach (var id in idArray)
+            {
+                var removedData = SearchSynonym.SearchSynonyms.Find(c => c.ID == id);
+                SearchSynonym.SearchSynonyms.Remove(removedData);
+            }
+            
+            return Json(new { SuccessCount = idArray.Count });
         }
         #endregion
     }

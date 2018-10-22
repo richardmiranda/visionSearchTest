@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -30,13 +31,13 @@ namespace viSearch.Controllers
                 switch (model.SortName)
                 {
                     case "ID":
-                        entities = entities.OrderBy(c => c.ID);
+                        entities = model.Ascending ? entities.OrderBy(c => c.ID) : entities.OrderByDescending(c => c.ID);
                         break;
                     case "SearchTerm":
-                        entities = entities.OrderBy(c => c.SearchTerm);
+                        entities = model.Ascending ? entities.OrderBy(c => c.SearchTerm) : entities.OrderByDescending(c => c.SearchTerm);
                         break;
                     case "Synonyms":
-                        entities = entities.OrderBy(c => c.Synonyms);
+                        entities = model.Ascending ? entities.OrderBy(c => c.Synonyms) : entities.OrderByDescending(c => c.Synonyms);
                         break;
                 }
             }
